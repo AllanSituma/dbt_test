@@ -36,10 +36,10 @@ SELECT transactions.*
 FROM last_loan
 JOIN transactions on last_loan."ClientID" = transactions.client_id
 AND last_loan."LastLoanOn"::Date >= transactions.transaction_date::date
-
 {% if is_incremental() %}
 
   -- this filter will only be applied on an incremental run
-  where created_at > (select max(created_at) from {{ this }})
+  WHERE created_at > (select max(created_at) from {{ this }})
 
 {% endif %}
+

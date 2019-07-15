@@ -1,3 +1,10 @@
+{{
+	config(
+		materialized='incremental',
+		schema='data_science'
+	)
+}}
+
 WITH all_transactions as (
 SELECT
     amount,
@@ -10,6 +17,7 @@ SELECT
 	split_part(sender,' ',5) fifth_part,
 	split_part(sender,' ',6) sixth_part,
 	transaction_code,
+	created_at,
 	transaction_date
 FROM {{ref('dbt_financial_credits')}}
 )
@@ -20,6 +28,7 @@ SELECT client_id,
 	      amount,
 	      first_part,
 		  transaction_code,
+		  created_at,
 	      transaction_date
 FROM all_transactions
 WHERE second_part = 'SACCO'
@@ -30,3 +39,11 @@ WHERE second_part = 'SACCO'
     OR third_part = 'Sacco'
     OR fourth_part = 'SACCO'
     OR fourth_part = 'Sacco'
+
+{% if is_incremental() %}
+
+AND created_at > (SELECT MAX(created_at) FROM {{this}})
+
+{% endif %}
+
+

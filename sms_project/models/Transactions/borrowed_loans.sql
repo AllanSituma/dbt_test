@@ -75,7 +75,7 @@ AND last_loan."LastLoanOn"::Date >= loan_transactions.transaction_date::date
 {% if is_incremental() %}
 
   -- this filter will only be applied on an incremental run
-  where created_at > (select max(created_at) from {{ this }})
+  WHERE created_at > (select max(created_at) from {{ this }})
 
 {% endif %}
 		
