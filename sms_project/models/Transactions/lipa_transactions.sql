@@ -7,7 +7,8 @@ JOIN loan_first ON loan_first.user_id = sms_raw.user_id
 
 SELECT client_id,
        amount,
-	   transaction_date 
+       transaction_code,
+	 transaction_date 
 FROM (
 SELECT loan_first."ClientID" client_id,
       sms_raw.*

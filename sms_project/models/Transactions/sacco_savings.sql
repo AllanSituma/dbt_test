@@ -9,6 +9,7 @@ SELECT
 	split_part(paybill,' ',4) fourth_part,
 	split_part(paybill,' ',5) fifth_part,
 	split_part(paybill,' ',6) sixth_part,
+	transaction_code,
 	transaction_date
 FROM {{ref('dbt_financial_debits')}})
 
@@ -17,6 +18,7 @@ SELECT client_id,
 	      paybill,
 	      amount,
 	      first_part,
+		  transaction_code,
 	      transaction_date
 FROM all_transactions
 WHERE second_part = 'SACCO'

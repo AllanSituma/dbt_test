@@ -2,6 +2,7 @@ SELECT
 client_id,
 amount,
 sender,
+transaction_code,
 transaction_date
 FROM {{ref('dbt_financial_credits')}}
 WHERE lower(split_part(sender,' ',6)) = 'bank'

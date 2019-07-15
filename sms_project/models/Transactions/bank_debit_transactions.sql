@@ -1,10 +1,19 @@
+{{
+    config(
+        materialized='incremental',
+        schema='data_science'
+    )
+}}
+
 WITH transactions as (
 SELECT
 client_id,
 amount,
 paybill,
 account,
-transaction_date
+transaction_code,
+transaction_date,
+created_at
 FROM {{ref ('dbt_financial_debits')}}
 WHERE lower(split_part(paybill,' ',2)) = 'bank'
 OR lower(split_part(paybill,' ',3)) = 'bank'
@@ -29,3 +38,11 @@ SELECT transactions.*
 FROM last_loan
 JOIN transactions on last_loan."ClientID" = transactions.client_id
 AND transactions.transaction_date::date <= last_loan."LastLoanOn"::Date
+
+
+{% if is_incremental() %}
+
+  -- this filter will only be applied on an incremental run
+  where created_at > (select max(created_at) from {{ this }})
+
+{% endif %}

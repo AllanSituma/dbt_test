@@ -1,7 +1,9 @@
 SELECT
 client_id,
 UPPER(split_part(paybill,' ',3)) Bank,
-amount
+amount,
+transaction_code,
+transaction_date
 FROM {{ref('dbt_financial_debits')}}
 WHERE lower(split_part(paybill,' ',2)) = 'via'
 OR lower(split_part(recipient,' ',3)) = 'via'

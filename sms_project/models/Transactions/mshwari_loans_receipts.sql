@@ -1,6 +1,7 @@
 SELECT DISTINCT ON (transaction_code)   client_id,
        amount,
-	   transaction_date
+       transaction_code,
+	transaction_date
 FROM (
 SELECT loan_first."ClientID" client_id,
       sms_raw.*

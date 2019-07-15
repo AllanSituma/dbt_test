@@ -1,9 +1,17 @@
+{{
+    config(
+        materialized='incremental',
+        schema='data_science'
+    )
+}}
 WITH transactions AS (
 SELECT
 client_id,
 amount,
 sender,
-transaction_date
+transaction_code,
+transaction_date,
+created_at
 FROM {{ref('dbt_financial_credits')}}
 WHERE lower(split_part(sender,' ',2)) = 'bank'
 OR lower(split_part(sender,' ',3)) = 'bank'
@@ -16,7 +24,8 @@ OR split_part(sender,' ',1) =  '517819'
 OR lower(split_part(sender,' ',2)) = 'stanbic'
 OR lower(split_part(sender,' ',1)) = 'citibank'
 OR lower(split_part(sender,' ',1)) = 'dtb'
-OR lower(split_part(sender,' ',1)) = 'gulf'),
+OR lower(split_part(sender,' ',1)) = 'gulf'
+),
 	
 last_loan as (
 SELECT * 
@@ -27,3 +36,10 @@ SELECT transactions.*
 FROM last_loan
 JOIN transactions on last_loan."ClientID" = transactions.client_id
 AND last_loan."LastLoanOn"::Date >= transactions.transaction_date::date
+
+{% if is_incremental() %}
+
+  -- this filter will only be applied on an incremental run
+  where created_at > (select max(created_at) from {{ this }})
+
+{% endif %}

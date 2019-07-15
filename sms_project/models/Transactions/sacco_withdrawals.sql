@@ -9,6 +9,7 @@ SELECT
 	split_part(sender,' ',4) fourth_part,
 	split_part(sender,' ',5) fifth_part,
 	split_part(sender,' ',6) sixth_part,
+	transaction_code,
 	transaction_date
 FROM {{ref('dbt_financial_credits')}}
 )
@@ -18,6 +19,7 @@ SELECT client_id,
 	      paybill,
 	      amount,
 	      first_part,
+		  transaction_code,
 	      transaction_date
 FROM all_transactions
 WHERE second_part = 'SACCO'
