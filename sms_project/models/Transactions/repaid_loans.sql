@@ -6,6 +6,7 @@ SELECT    client_id,
 	      CASE WHEN third_part = 'TIMIZA' then 'TIMIZA' 
 	           else first_part
 	      end first_part,
+		  transaction_code,
 	      transaction_date
 	FROM (
 SELECT
@@ -18,6 +19,7 @@ SELECT
 	split_part(paybill,' ',4) fourth_part,
 	split_part(paybill,' ',5) fifth_part,
 	split_part(paybill,' ',6) sixth_part,
+	transaction_code,
 	transaction_date
 FROM {{ref('dbt_financial_debits')}}    ) q1
 	WHERE first_part IN (

@@ -1,16 +1,25 @@
+{{
+    config(
+        materialized='incremental',
+        schema='data_science'
+    )
+}}
+
 WITH all_transactions as (
 SELECT
     amount,
 	sender,
 	client_id,
+	transaction_code,
 	split_part(sender,' ',1) first_part,
 	split_part(sender,' ',2) second_part,
 	split_part(sender,' ',3) third_part,
 	split_part(sender,' ',4) fourth_part,
 	split_part(sender,' ',5) fifth_part,
 	split_part(sender,' ',6) sixth_part,
-	transaction_date
-FROM dbt_financial_credits
+	transaction_date,
+	created_at
+FROM {{ref('dbt_financial_credits')}}
 ),
 
 loan_transactions as (
@@ -20,7 +29,9 @@ SELECT client_id,
 	      CASE WHEN third_part = 'TIMIZA' then 'TIMIZA' 
 	           else first_part
 	      end first_part,
-	      transaction_date
+		  transaction_code,
+	      transaction_date,
+		  created_at
 	FROM all_transactions
 	WHERE first_part IN (
 	  'AERO','AFRI','AFRIKALOAN','ALIQUOT','BAYES',
@@ -61,7 +72,12 @@ JOIN loan_transactions ON last_loan."ClientID" = loan_transactions.client_id
 AND last_loan."LastLoanOn"::Date >= loan_transactions.transaction_date::date
 
 
+{% if is_incremental() %}
 
+  -- this filter will only be applied on an incremental run
+  where created_at > (select max(created_at) from {{ this }})
+
+{% endif %}
 		
 
 	
