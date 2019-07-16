@@ -1,6 +1,6 @@
 WITH all_transactions as (
-SELECT * FROM public_data_science.bank_credit_transactions
-
+SELECT * 
+FROM public_data_science.sacco_withdrawals
 ),
 
 daily as (
@@ -77,16 +77,16 @@ FROM query
 GROUP BY client)
 
 SELECT client_id,
-       max(all_transactions.amount) max_withdraw_from_bank,
-	   min(all_transactions.amount) min_withdraw_from_bank,
-	   sum(all_transactions.amount) total_withdraw_from_bank,
-	   count(transaction_code) num_bank_withdraw_transactions,
- 	   agg_trans.avg_daily_trans avg_daily_bank_w_transactions,
-	   agg_trans.avg_daily_amount avg_daily_bank_w_amount,
-	   agg_trans.avg_weekly_trans avg_weekly_bank_w_transactions,
-	   agg_trans.avg_weekly_amount avg_weekly_bank_w_amount,
-	   agg_trans.avg_monthly_trans avg_monthly_bank_w_transactions,
-	   agg_trans.avg_monthly_amount avg_monthly_bank_w_amount
+       max(all_transactions.amount) max_sacco_withdraw,
+	   min(all_transactions.amount) min_sacco_withdraw,
+	   sum(all_transactions.amount) total_sacco_withdraw,
+	   count(transaction_code) num_sacco_withdraw_transactions,
+ 	   agg_trans.avg_daily_trans avg_daily_sacco_withdraw_transactions,
+	   agg_trans.avg_daily_amount avg_daily_sacco_withdraw_amount,
+	   agg_trans.avg_weekly_trans avg_weekly_sacco_withdraw_transactions,
+	   agg_trans.avg_weekly_amount avg_weekly_sacco_withdraw_amount,
+	   agg_trans.avg_monthly_trans avg_monthly_sacco_withdraw_transactions,
+	   agg_trans.avg_monthly_amount avg_monthly_sacco_withdraw_amount
 FROM all_transactions
 JOIN agg_trans ON all_transactions.client_id = agg_trans.client
 GROUP BY client_id,
@@ -96,7 +96,3 @@ GROUP BY client_id,
 	    agg_trans.avg_weekly_amount,
 	    agg_trans.avg_monthly_trans,
 	    agg_trans.avg_monthly_amount
-
-  
-  
- 

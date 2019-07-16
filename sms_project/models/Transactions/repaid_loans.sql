@@ -71,7 +71,7 @@ SELECT *
 FROM loan_first 
 WHERE loan_first."LastLoanOn" IS NOT NULL)
 
-SELECT *
+SELECT transactions.*
 FROM last_loan
 JOIN transactions ON last_loan."ClientID" = transactions.client_id
 AND last_loan."LastLoanOn"::Date >= transactions.transaction_date::date
