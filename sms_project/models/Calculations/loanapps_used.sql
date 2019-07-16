@@ -1,3 +1,10 @@
+{{
+	config(
+		materialized='table',
+		schema='data_science'
+	)
+}}
+
 SELECT  client_id,
         sum(case when 'BRANCH' = ANY(loan_apps) then 1 else 0 end) Branch,
 		sum(case when 'WEZA' = ANY(loan_apps) then 1 else 0 end) Weza,

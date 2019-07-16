@@ -1,3 +1,11 @@
+{{
+	config(
+		materialized='table',
+		schema='data_science'
+	)
+}}
+
+
 WITH all_transactions as (
 SELECT * FROM public_data_science.bank_debit_transactions
 

@@ -1,3 +1,10 @@
+{{
+	config(
+		materialized='table',
+		schema='data_science'
+	)
+}}
+
 WITH all_transactions AS (
 SELECT * FROM public_data_science.borrowed_loans
 ),
