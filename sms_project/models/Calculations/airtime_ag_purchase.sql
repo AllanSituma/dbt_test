@@ -1,5 +1,13 @@
+{{
+	config(
+		materialized='table',
+		schema='data_science'
+	)
+}}
+
 WITH all_transactions AS (
-SELECT * FROM public_data_science.airtime_purchase_transactions
+	SELECT * 
+	FROM public_data_science.airtime_purchase_transactions
 ),
 
 daily AS (
