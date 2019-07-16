@@ -1,5 +1,5 @@
 WITH all_transactions as (
-SELECT * FROM {{ref('betting_spends')}}
+SELECT * FROM public_data_science.betting_spends
 
 ),
 

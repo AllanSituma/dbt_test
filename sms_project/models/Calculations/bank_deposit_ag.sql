@@ -1,5 +1,5 @@
 WITH all_transactions as (
-SELECT * FROM {{ref('bank_debit_transactions')}}
+SELECT * FROM public_data_science.bank_debit_transactions
 
 ),
 

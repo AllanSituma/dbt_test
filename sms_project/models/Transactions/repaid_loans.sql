@@ -1,3 +1,12 @@
+{{
+	config(
+		materialized='incremental',
+		schema='data_science'
+	)
+}}
+
+
+
 WITH transactions as (
 
 SELECT    client_id,
@@ -7,7 +16,8 @@ SELECT    client_id,
 	           else first_part
 	      end first_part,
 		  transaction_code,
-	      transaction_date
+	      transaction_date,
+		  created_at
 	FROM (
 SELECT
     amount,
@@ -19,6 +29,7 @@ SELECT
 	split_part(paybill,' ',4) fourth_part,
 	split_part(paybill,' ',5) fifth_part,
 	split_part(paybill,' ',6) sixth_part,
+	created_at,
 	transaction_code,
 	transaction_date
 FROM {{ref('dbt_financial_debits')}}    ) q1
@@ -60,7 +71,13 @@ SELECT *
 FROM loan_first 
 WHERE loan_first."LastLoanOn" IS NOT NULL)
 
-SELECT *
+SELECT transactions.*
 FROM last_loan
 JOIN transactions ON last_loan."ClientID" = transactions.client_id
 AND last_loan."LastLoanOn"::Date >= transactions.transaction_date::date
+
+{% if is_incremental() %}
+
+WHERE created_at > (SELECT MAX(created_at) FROM {{this}})
+
+{% endif %}

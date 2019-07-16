@@ -1,5 +1,5 @@
 WITH all_transactions AS (
-SELECT * FROM {{ref('borrowed_loans')}}
+SELECT * FROM public_data_science.borrowed_loans
 ),
 
 num_loan_apps AS (
